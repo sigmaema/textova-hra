@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini Hra</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: bisque;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+       
+        .map-container {
+            position: relative;
+            max-width: 600px;
+            background-image: url('https://i.pinimg.com/736x/c2/b4/ac/c2b4ac4ad850ea605006f4c84ff21c80.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        h1 {
+    font-size: 24px;
+    color: #444;
+    max-width: 75%;
+    margin: 0 auto;
+}
+
+p {
+    font-size: 18px;
+    max-width: 75%;
+    margin: 0 auto;
+}
+
+a.button {
+    display: inline-block;
+    background: #007bff;
+    color: white;
+    padding: 10px 20px;
+    margin: 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+a.button:hover {
+    background: #0056b3;
+}
+img {
+    display: block;
+    margin: 10px auto; /* Zarovná na střed */
+    width: 600px; /* Zvýší šířku */
+    height: 600px; /* Zvýší výšku */
+    object-fit: contain;
+    border-radius: 5px;
+}
+
+        
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 600px;
+            height: 80%;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            overflow: auto;
+        }
+
+        .popup img {
+            width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+        }
+
+        .popup .popup-buttons {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .popup .popup-button {
+            background-color:#007bff;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+            margin-top: 10px;
+            color: white;
+            text-decoration: none;
+        }
+
+        .popup .popup-button:hover {
+            background-color:#0056b3 ;
+        }
+
+        .popup .close-btn {
+            background-color: #f44336;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+            margin-top: 10px;
+            color: white;
+        }
+        .button-container {
+    display: flex;
+    gap: 10px; 
+    justify-content: center; 
+        }
+        #map-container {
+    position: relative;
+    display: inline-block; /* Aby se velikost přizpůsobila obrázku */
+}
+
+#map-image {
+    width: 600px; 
+    height: auto;
+    display: block;
+}
+
+#player-dot {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: black;
+    border-radius: 50%;
+    transition: left 0.2s, top 0.2s;
+}
+
+
+
+    </style>
+</head>
+<body>
+    <h1>Dostal ses ven a našel jsi na zemi mapu</h1>
+    <div id="map-container">
+        <img src="https://i.pinimg.com/736x/c2/b4/ac/c2b4ac4ad850ea605006f4c84ff21c80.jpg" alt="" id="map-image">
+        <div id="player-dot"></div>
+    </div>
+    <p>Pro odhalení skutečné pravdy musíš jít i tam, kam nechceš. Možná třeba tam, kde se to celé zvrtlo.</p>
+    <p>K pohybu používej šipky, nechoď mimo silnice</p>
+    <p id="souradnice"></p>
+    
+    <div id="popup" style="display: none;" class="popup">
+        <div id="popup-content"></div>
+        <div class="button-container">
+            <a id="continue-link" href="#" class="popup-button">Pokračovat</a>
+            <button onclick="document.getElementById('popup').style.display='none'" class="close-btn">Jít zpátky</button>
+        </div>
+    </div>
+    
+    <div class="button-container">
+        <button class="arrow" id="up">↑</button>
+        <button class="arrow" id="down">↓</button>
+        <button class="arrow" id="left">←</button>
+        <button class="arrow" id="right">→</button>
+    </div>
+    <p>*Tvoje pozice je při otevření mapy vždy na červeném puntíku</p>
+
+    <script>
+        const souradniceText = document.getElementById('souradnice')
+        const roadLines = [
+            {x1:0, y1:0, x2:1, y2:0},
+            {x1:0, y1:0, x2:0, y2:1},
+            {x1:0, y1:1, x2:4, y2:1},
+            {x1:4, y1:0, x2:4, y2:1},
+            {x1:4, y1:0, x2:6, y2:0},
+            {x1:6, y1:0, x2:6, y2:7},
+            {x1:1, y1:7, x2:8, y2:7},
+            {x1:8, y1:7, x2:8, y2:4},
+            {x1:2, y1:2, x2:9, y2:2},
+            {x1:1, y1:5, x2:6, y2:5},
+            {x1:1, y1:5, x2:1, y2:1},
+            {x1:3, y1:1, x2:3, y2:7},
+        ];
+        
+        let roads = [];
+
+        roadLines.forEach(line => {
+            if (line.y1 === line.y2) {
+                for (let x = Math.min(line.x1, line.x2); x <= Math.max(line.x1, line.x2); x++) {
+                    roads.push({ x, y: line.y1 });
+                }
+            } else if (line.x1 === line.x2) {
+                for (let y = Math.min(line.y1, line.y2); y <= Math.max(line.y1, line.y2); y++) {
+                    roads.push({ x: line.x1, y });
+                }
+            }
+        });
+        console.log("Generované silnice:", roads);
+        const positions = {
+            bus: { x: 1, y: 0, popupContent: "<img src='https://www.abris.cz/wp-content/uploads/2020/02/strecha-autobusovej-zastavky-LIANA-2A-ral-7016-2-1024x768.jpg' alt='Autobusová zastávka'><p>Jsi zpět na zastávce, tam kde to všechno začlo. Je tu chaos, vypadá to, že někoho hledají</p>" , redirectUrl: "zastavka.html"},
+            home: { x: 1, y: 7, popupContent: "<img src='https://mlsf.remax-czech.cz/data//zs/386987/2249583.jpg' alt='Doma'><p>Jsi doma, kde bys měl být v bezpečí, ale teď je to naopak.</p>", redirectUrl:"doma.html" },
+            ruin: { x: 8, y: 5, popupContent: "<img src='https://www.stredniskoly.com/data/USR_042_DEFAULT/gjs_budova.jpg' alt='Gjs'><p>Jsi u školy, ale vypadá to tu zvláštně. Nikdo tu není, nikde se nesvití, neslyšíš ani žádné zvuky</p>", redirectUrl:"skola.html" },
+            forest: { x: 9, y: 2, popupContent: "<img src='https://upload.wikimedia.org/wikipedia/commons/e/eb/Plze%C5%88sk%C3%A1_pahorkatina%2Cokol%C3%AD_Kladrub%2C_lesn%C3%AD_cesta_II.JPG' alt='Les'><p>Tahle cesta vede k nádraží. Třeba by to mohlo přidat další dílek do téhle podivné skládačky</p>" , redirectUrl:"lesnicesta.html"},
+            tree: { x: 2, y: 2, popupContent: "<img src='https://www.stromroku.cz/getattachment/95eb8cd3-2463-4cc2-8375-cb5c8192d974/stromem-roku-je-podruhe-v-rade-hruska?width=870' alt='Strom'><p>Tenhle strom se ti vždy zdál nějaký divný, hlavně kvůli té díry uprostřed</p>" , redirectUrl:"pamatnystrom.html"}
+        };
+        //river: { x: 3, y: 4, popupContent: "<img src='flooded_road.jpg' alt='Zatopená silnice'><p>Tudy nemůžeš projít, silnice je zatopená!</p>" },
+        let playerPos = { x: 3, y: 2 };
+
+        function checkPosition() {
+    for (const key in positions) {
+        if (positions[key].x === playerPos.x && positions[key].y === playerPos.y) {
+            openPopup(positions[key].popupContent, positions[key].redirectUrl);
+        }
+    }
+}
+
+
+
+function isRoad(x, y) {
+    console.log(`Kontrola cesty na: x=${x}, y=${y}`);
+    
+    for (let i = 0; i < roads.length; i++) {
+        const road = roads[i];
+        console.log(`Porovnávám s: x=${road.x}, y=${road.y}`);
+        
+        if (road.x == x && road.y == y) {  
+            console.log("✔ Toto je platná cesta!");
+            return true;
+        }
+    }
+    
+    console.log("❌ Toto NENÍ platná cesta!");
+    return false;
+}
+
+
+        function openPopup(content, redirectUrl) {
+            const popupContent = document.getElementById("popup-content");
+    popupContent.innerHTML = content;
+
+    document.getElementById("popup").style.display = "block";
+
+    const continueButton = document.getElementById("continue-link");
+    continueButton.style.display = 'block'; 
+
+    continueButton.onclick = function() {
+        window.location.assign(redirectUrl); 
+    }
+}
+
+        
+        
+        function closePopup() {
+            document.getElementById("popup").style.display = "none";
+        }
+
+        souradniceText.innerHTML = `Tvoje pozice: x: ${playerPos.x}, y:${playerPos.y}`
+        console.log(`Aktuální pozice hráče: x = ${playerPos.x}, y = ${playerPos.y}`);
+        
+
+        const playerDot = document.getElementById("player-dot");
+const mapImage = document.getElementById("map-image");
+const mapContainer = document.getElementById("map-container");
+
+const GRID_SIZE_X = 11.1;
+const GRID_SIZE_Y = 11.2;
+
+
+function updatePlayerPosition() {
+    const mapRect = mapImage.getBoundingClientRect();
+    const containerWidth = mapRect.width;
+    const containerHeight = mapRect.height;
+
+    const gridSizeX = containerWidth / GRID_SIZE_X; 
+    const gridSizeY = containerHeight / GRID_SIZE_Y;
+    const offsetX = 50;
+
+    playerDot.style.left = `${(playerPos.x * gridSizeX) + offsetX}px`;
+    playerDot.style.top = `${(GRID_SIZE_Y - 1 - playerPos.y) * gridSizeY}px`;
+}
+
+/*function updatePlayerPosition() {
+    const mapRect = mapImage.getBoundingClientRect(); // Získání rozměrů mapy
+    const containerWidth = mapRect.width;
+    const containerHeight = mapRect.height;
+
+    const gridSizeX = containerWidth / GRID_SIZE_X; // Velikost jednoho políčka
+    const gridSizeY = containerHeight / GRID_SIZE_Y;
+
+    // Oprava výpočtu Y - převrácení osy
+    playerDot.style.left = `${playerPos.x * gridSizeX}px`;
+    playerDot.style.top = `${(GRID_SIZE_Y - 1 - playerPos.y) * gridSizeY}px`; 
+}*/
+
+function movePlayer(direction) {
+    console.log(`movePlayer byla zavolána s direction: ${direction}`);
+    let newX = playerPos.x;
+    let newY = playerPos.y;
+
+    if (direction === "up") newY++; 
+    if (direction === "down") newY--; 
+    if (direction === "left") newX--;
+    if (direction === "right") newX++;
+
+    console.log(`Kontrola cesty na: x=${newX}, y=${newY}`);
+
+    if (!isRoad(newX, newY)) {
+        alert("Tam nemůžeš jít!"); 
+        return;
+    }
+
+    playerPos.x = newX;
+    playerPos.y = newY;
+
+    souradniceText.innerHTML = `Tvoje pozice: x: ${playerPos.x}, y:${playerPos.y}`;
+
+    console.log(`Nová pozice hráče: x=${playerPos.x}, y=${playerPos.y}`);
+
+    checkPosition();
+    updatePlayerPosition();
+
+    if(newX === 3 && newY === 4){
+        alert('Silnice je zatopená! Musíš jít jinudy');
+        console.log(`Nová pozice: x=${playerPos.x}, y=${playerPos.y}`);
+    }
+}
+
+function movePlayer(direction) {
+            console.log(`movePlayer byla zavolána s direction: ${direction}`);
+            let newX = playerPos.x;
+            let newY = playerPos.y;
+
+            if (direction === "up") newY++;
+            if (direction === "down") newY--;
+            if (direction === "left") newX--;
+            if (direction === "right") newX++;
+
+            if (!isRoad(newX, newY)) {
+                alert("Tam nemůžeš jít!"); 
+                return;
+            }
+            playerPos.x = newX;
+            playerPos.y = newY;
+
+            souradniceText.innerHTML = `Tvoje pozice: x: ${playerPos.x}, y:${playerPos.y}`;
+    
+            console.log(`Nová pozice hráče: x=${playerPos.x}, y=${playerPos.y}`);
+
+
+            checkPosition();
+            updatePlayerPosition()
+            if(newX===3 && newY===4){
+            alert('Silnice je zatopená! Musíš jít jinudy')
+            console.log(`Nová pozice: x=${playerPos.x}, y=${playerPos.y}`);
+        }
+        }
+
+document.getElementById("up").addEventListener("click", () => movePlayer("up"));
+document.getElementById("down").addEventListener("click", () => movePlayer("down"));
+document.getElementById("left").addEventListener("click", () => movePlayer("left"));
+document.getElementById("right").addEventListener("click", () => movePlayer("right"));
+
+window.onload = updatePlayerPosition;
+
+
+
+    </script>
+</body>
+</html>
+<!--function movePlayer(direction) {
+    console.log(`movePlayer byla zavolána s direction: ${direction}`);
+
+    let newX = playerPos.x;
+    let newY = playerPos.y;
+
+    if (direction === "up") newY++;
+    if (direction === "down") newY--;
+    if (direction === "left") newX--;
+    if (direction === "right") newX++;
+
+    if (!isRoad(newX, newY)) {
+        alert("Tam nemůžeš jít!"); 
+        return;
+    }
+
+    // Aktualizace pozice hráče
+    playerPos.x = newX;
+    playerPos.y = newY;
+
+    // Aktualizace souřadnic v HTML
+    souradniceText.innerHTML = `Tvoje pozice: x: ${playerPos.x}, y:${playerPos.y}`;
+    
+    console.log(`Nová pozice hráče: x=${playerPos.x}, y=${playerPos.y}`);
+
+    // Kontrola speciální podmínky na zatopenou silnici
+    if (playerPos.x === 3 && playerPos.y === 4) {
+        alert('Silnice je zatopená! Musíš jít jinudy');
+    }
+
+    checkPosition();
+}-->

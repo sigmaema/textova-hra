@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1 id="nadpis">Jsi na nádraží a potkáš bezdomovce Jirku</h1>
+    <img src="https://i.pinimg.com/736x/fe/cd/f1/fecdf1bd0292323f8207999db4bb9eb6.jpg" alt="">
+    <p id="textik"></p>
+    <a href="" class="button" id="dej10kc">Dám mu 10 Kč</a>
+    <a href="jirkajeangry.html" class="button" id="ukradniBranika">Ukradnu mu Braníka a uteču</a>
+
+    <script>
+        const dej10kc = document.getElementById('dej10kc');
+        const ukradniBranika = document.getElementById('ukradniBranika');
+        const nadpis = document.getElementById('nadpis');
+        const textik = document.getElementById('textik');
+
+        dej10kc.addEventListener('click', (event) => {
+            event.preventDefault();
+            textik.innerHTML = 'Jirka ti poděkoval';
+            dej10kc.style.display = 'none';
+            ukradniBranika.style.display = 'none';
+
+            const pojeduDomu = document.createElement('a');
+            pojeduDomu.href = 'jsidoma.html';
+            pojeduDomu.className = 'button';
+            pojeduDomu.innerText = 'Pojedu domů';
+
+            textik.insertAdjacentElement('afterend', pojeduDomu);
+        });
+
+        ukradniBranika.addEventListener('click', (event) => {
+            event.preventDefault();
+            nadpis.innerHTML = 'Ty jsi ale zlý! Jirka na tebe flusnul, ale pak tě nechal být';
+            textik.innerHTML = ''; 
+            dej10kc.style.display = 'none';
+            ukradniBranika.style.display = 'none';
+
+            const pojeduDomu = document.createElement('a');
+            pojeduDomu.href = 'jsidoma.html';
+            pojeduDomu.className = 'button';
+            pojeduDomu.innerText = 'Pojedu domů';
+
+            const vratimBranika = document.createElement('a');
+            vratimBranika.href = '';
+            vratimBranika.className = 'button';
+            vratimBranika.innerText = 'Vrátím Jirkovi jeho Braníka';
+
+            vratimBranika.addEventListener('click', (e) => {
+                e.preventDefault();
+                textik.innerHTML = 'Jirka ti poděkoval';
+                vratimBranika.style.display = 'none';
+            });
+
+            textik.insertAdjacentElement('afterend', pojeduDomu);
+            textik.insertAdjacentElement('afterend', vratimBranika);
+        });
+    </script>
+</body>
+</html>

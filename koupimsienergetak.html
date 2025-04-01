@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Došel jsi k čongovi. Jaký energeťák si koupíš?</h1>
+    <img src="https://i.pinimg.com/736x/9b/49/9d/9b499d40dc09ca29263ae026b22f4983.jpg" alt="">
+    <p id="textik"></p>
+    <a href="" id="monster" class="button">Monster</a>
+    <a href="" id="krejzik" class="button">Krejzík</a>
+    <a href="" id="redbull" class="button">Red bull</a>
+    <a href="" id="tiger" class="button">Tiger</a>
+    <script>
+        const monstr = document.getElementById('monster')
+        const krejzik = document.getElementById('krejzik')
+        const redbull = document.getElementById('redbull')
+        const tiger = document.getElementById('tiger')
+        const textik = document.getElementById('textik')
+
+        monstr.addEventListener('click', () => {
+            event.preventDefault()
+            textik.innerHTML = 'Utratil jsi své poslední peníze, ale stálo to za to'
+            krejzik.style.display = 'none'
+            monstr.style.display = 'none'
+            redbull.style.display = 'none'
+            tiger.style.display = 'none'
+            const pujduSeUcit = document.createElement('a');
+            pujduSeUcit.href = 'pujduseucit.html'; //pridat html
+            pujduSeUcit.className = 'button';
+            pujduSeUcit.innerText = 'Půjdu se učit';
+
+            textik.insertAdjacentElement('afterend', pujduSeUcit);
+        });
+        krejzik.addEventListener('click', ()=>{
+            event.preventDefault()
+            textik.innerHTML = 'Skvělá volba! Neutratil jsi všechny své peníze, ale i přesto jsi plný energie'
+            krejzik.style.display = 'none'
+            monstr.style.display = 'none'
+            redbull.style.display = 'none'
+            tiger.style.display = 'none'
+            const pujduSeUcit = document.createElement('a');
+            pujduSeUcit.href = 'pujduseucit.html'; //pridat html
+            pujduSeUcit.className = 'button';
+            pujduSeUcit.innerText = 'Půjdu se učit';
+
+            textik.insertAdjacentElement('afterend', pujduSeUcit);
+        });
+        redbull.addEventListener('click', () => {
+            event.preventDefault()
+            textik.innerHTML = 'Honestly why would u. Byl strašně předraženej a ani ti nechutnal'
+            krejzik.style.display = 'none'
+            monstr.style.display = 'none'
+            redbull.style.display = 'none'
+            tiger.style.display = 'none'
+            const pujduSeUcit = document.createElement('a');
+            pujduSeUcit.href = 'pujduseucit.html'; //pridat html
+            pujduSeUcit.className = 'button';
+            pujduSeUcit.innerText = 'Půjdu se učit';
+
+            textik.insertAdjacentElement('afterend', pujduSeUcit);
+        });
+        tiger.addEventListener('click', () => {
+            event.preventDefault()
+            textik.innerHTML = 'Zlatá střední cesta. Neutratil jsi tolik peněz a moc ti chutnal'
+            krejzik.style.display = 'none'
+            monstr.style.display = 'none'
+            redbull.style.display = 'none'
+            tiger.style.display = 'none'
+            const pujduSeUcit = document.createElement('a');
+            pujduSeUcit.href = 'pujduseucit.html'; //pridat html
+            pujduSeUcit.className = 'button';
+            pujduSeUcit.innerText = 'Půjdu se učit';
+
+            textik.insertAdjacentElement('afterend', pujduSeUcit);
+        })
+    </script>
+</body>
+</html>

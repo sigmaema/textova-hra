@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1 id="nadpis">Snažíš se nastoupit do 303, ale autobusák zpochybňuje tvůj jízdní doklad a chce tě vyloučit z přepravy</h1>
+    <img src="https://i.pinimg.com/736x/66/6a/c2/666ac277961d90729998c90a2faeb0b6.jpg" alt="" id="obrazek">
+    <p id="tosijenmyslis"></p>
+    <p id="skibidi"></p>
+    <a href="odsuduzsenedostanes.html"><img src="" alt="" id="obrazek2"></a>
+    <a href="jsidoma.html" class="button" id="cudlik3">Půjdu domů pěšky</a>
+    <a href="" class="button" id="cudlik2">Budu se s ním hádat</a>
+    <a href="" class="button" id="cudlik">Pojedu jinou 303</a>
+    <script>
+        const textik = document.getElementById('tosijenmyslis')
+        const cudlik = document.getElementById('cudlik')
+        const cudlik2 = document.getElementById('cudlik2')
+        const cudlik3 = document.getElementById('cudlik3')
+        const textik2 = document.getElementById('skibidi')
+        const obrazek = document.getElementById('obrazek')
+        const obrazek2 = document.getElementById('obrazek2')
+        const nadpis = document.getElementById('nadpis')
+        cudlik.addEventListener('click', () => {
+            event.preventDefault();
+            nadpis.innerHTML = 'Tohle jsi neměl dělat...'
+            obrazek.style.display = 'none'
+            textik.style.margin = '20px auto'
+            textik.innerHTML = 'Nastoupil jsi do dalšího autobusu, ale něco se ti zdá divné. Příjde ti, že jsi těmito ulicemi nikdy neprojížděl, a přitom tudy jezdíš skoro každý den. Cítíš se podivně, máš pocit že tu nemáš být. Proto se zvedneš a jdeš ke dveřím';
+            textik2.innerHTML = 'Stiskni tlačítko stop, abys mohl vystoupit z autobusu'
+            obrazek2.src = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQls26Frtwps0GGD5aQc2BC___cbpvChDy-A&s'
+            cudlik.style.display = 'none'
+            cudlik2.style.display = 'none'
+            cudlik3.style.display = 'none'
+        });
+        cudlik2.addEventListener('click', () => {
+            event.preventDefault();
+            if (textik.textContent === 'Blude s řidičema 303 si nezahrávej') {
+                textik.textContent = 'Varovala jsem tě, právě jsi dostal KO od řidiče';
+                cudlik2.style.display = 'none'
+            } else {
+                textik.textContent = 'Blude s řidičema 303 si nezahrávej';
+            }
+        });
+    </script>
+</body>
+</html>
