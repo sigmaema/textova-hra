@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Webík na spokojnie</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <h1 style="font-size: 36px;">Ahoj! Jak se máš? </h1>
+
+        <form id="jakSeMas">
+            <p>Data jsou ukládána do google shits souboru</p>
+            <input id="name" placeholder="Tvoje jméno..." required autocomplete="off"/>
+
+            <label for="rating"></label>
+            <select id="rating" required>
+                <option value="">Vyber...</option>
+                <option value="😞">😞</option>
+                <option value="😐">😐</option>
+                <option value="🙂">🙂</option>
+                <option value="😄">😄</option>
+                <option value="🤩">🤩</option>
+            </select>
+
+            <button type="submit">Odeslat</button>
+        </form>
+        <h1 style="margin: 40px auto 0;">Hledáš něco?</h1>
+
+        <a href="http://nemcovaa.borec.cz/strana1.html" class="button">Textová hra na ikt</a>
+        <a href="http://nemcovaa.borec.cz/kaficko.html" class="button">Cutesy hra s pečením </a>
+        <a href="http://nemcovaa.borec.cz/bombombinigusini.html" class="button">Italský brainrot clicker</a>
+
+        <script>
+            document.getElementById("jakSeMas").addEventListener("submit", function (e) {
+                e.preventDefault();
+                const name = document.getElementById('name').value;
+                const rating = document.getElementById('rating').value;
+                fetch('https://script.google.com/macros/s/AKfycbxauni3r2j2jJRSe6KsiJ8MJfv9M0ylb8x-nKZ-617GSPA9YBvfcHo-UWYVDMEGIh-d/exec', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        name: name,
+                        rating: rating
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    mode: 'no-cors',
+                })
+                .then(response => {
+        console.log('Request made');
+        // Po úspěšném odeslání vyprázdni input a select
+        document.getElementById('name').value = ''; // Vyprázdní input
+        document.getElementById('rating').value = ''; // Vyprázdní select
+    })
+                .catch(error => console.error('Error:', error));
+            });
+        </script>
+
+    </body>
+</html>
