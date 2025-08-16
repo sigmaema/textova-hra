@@ -125,6 +125,14 @@
             class="button">Italský brainrot clicker</a>
         <a href="http://nemcovaa.borec.cz/kociciRozhodovac.html"
             class="button">Kočičí rozhodovač</a>
+        <a href="http://nemcovaa.borec.cz/react.html"
+            class="button">První react app</a>
+        <a href="http://nemcovaa.borec.cz/uvod.html"
+            class="button">Slovanská mytologie (závěrečný projekt)</a>
+        <a href="http://nemcovaa.borec.cz/pwdgame.html"
+            class="button">Password Game</a>
+        <a href="http://nemcovaa.borec.cz/nemamtuseni.html"
+            class="button">Microsoft simulátor</a>
         <div class="container1">
             <div class="box obrazek2">
                 <h2>Fakt vtipnej meme hahahaha</h2>
@@ -137,7 +145,7 @@
             </div>
 
             <div class="box spotify">
-                <h2>Můj ballerskej playlist</h2>
+                <h2>Cooked music taste 💀</h2>
                 <iframe style="border-radius:12px"
                     src="https://open.spotify.com/embed/playlist/3PDHhiOpyjNMG3txqZiXEa?utm_source=generator"
                     width="100%" height="352" frameBorder="0" allowfullscreen
@@ -153,45 +161,39 @@
         </div>
         <script>
                 document.getElementById("jakSeMas").addEventListener("submit", function (e) {
-                    e.preventDefault();
-            
-                    const name = document.getElementById('name').value;
-                    const rating = document.getElementById('rating').value;
-                    const submitBtn = document.querySelector('#jakSeMas button[type="submit"]'); // nebo přímo id tlačítka
-            
-                    const maxLength = 20;
-                    if (name.length > maxLength) {
-                        alert(`Blude tvoje jméno nemá ${name.length} znaků`);
-                        return;
-                    }
-            
-                    submitBtn.disabled = true;
-                    submitBtn.textContent = "Odesílám...";
-            
-                    fetch('https://script.google.com/macros/s/AKfycbxauni3r2j2jJRSe6KsiJ8MJfv9M0ylb8x-nKZ-617GSPA9YBvfcHo-UWYVDMEGIh-d/exec', {
-                        method: 'POST',
-                        body: JSON.stringify({
-                            name: name,
-                            rating: rating
-                        }),
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        mode: 'no-cors',
-                    })
-                    .then(() => {
-                        console.log('Request made');
-                        document.getElementById('name').value = '';
-                        document.getElementById('rating').value = '';
-                    })
-                    .catch(error => console.error('Error:', error))
-                    .finally(() => {
-                        setTimeout(() => {
-                            submitBtn.disabled = false;
-                            submitBtn.textContent = "Odeslat znovu";
-                        }, 5000);
-                    });
-                });
+    e.preventDefault();
+
+    const name = document.getElementById('name').value;
+    const rating = document.getElementById('rating').value;
+    const submitBtn = document.querySelector('#jakSeMas button[type="submit"]');
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Odesílám...";
+
+    const formData = new URLSearchParams();
+    formData.append("name", name);
+    formData.append("rating", rating);
+
+    fetch("https://script.google.com/macros/s/AKfycbyixC2dRstjSuilHiAQrpprzYyqB1lXJidi_qEzGbXE067WQ-OLg_bEqfDIRvZSqUrBnA/exec", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.text())
+    .then(data => {
+        console.log("Success:", data);
+        document.getElementById('name').value = '';
+        document.getElementById('rating').value = '';
+    })
+    .catch(error => console.error("Error:", error))
+    .finally(() => {
+        setTimeout(() => {
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Odeslat znovu";
+        }, 5000);
+    });
+});
+
+
             </script>
 
         <script>
